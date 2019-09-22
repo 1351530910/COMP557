@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- node type: free spherical rotary-->
+<!-- geom type: box sphere teapot-->
+<doc>
+    <node type="free" name="root">
+        <geom type="teapot" name="body" scale="1 1 1" center="0 0 0" color="255 0 0"/>
+       
+    </node>
+</doc>
