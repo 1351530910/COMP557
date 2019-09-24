@@ -3,7 +3,21 @@
 <!-- geom type: box sphere teapot-->
 <doc>
     <node type="free" name="root">
-        <geom type="teapot" name="body" scale="1 1 1" center="0 0 0" color="255 0 0"/>
-       
+        <geom type="sphere" name="base" center="0 0 0" orientation="0 0 0" scale="1 1 1" color="255 0 0"/>
+        <node type="spherical" name="connection" position="0 0 0">
+            <geom type="sphere" name="node" center="0 1.5 0" orientation="0 0 0" scale="1 1 1" color="122 122 0"/>
+            <node type="spherical" name="connection" position="0 1.5 0">
+            <geom type="sphere" name="node" center="0 1.5 0" orientation="0 0 0" scale="1 1 1" color="0 255 0"/>
+            <node type="spherical" name="connection" position="0 1.5 0">
+            <geom type="sphere" name="node" center="0 1.5 0" orientation="0 0 0" scale="1 1 1" color="0 122 122"/>
+            <node type="spherical" name="connection" position="0 1.5 0">
+            <geom type="sphere" name="node" center="0 1.5 0" orientation="0 0 0" scale="1 1 1" color="0 0 255"/>
+            <node type="free" name="connection" position="0 1.5 0">
+            <geom type="teapot" name="node" center="0 1.5 0" orientation="0 0 0" scale="1 1 1" color="122 0 122"/>
+        </node>
+        </node>
+        </node>
+        </node>
+        </node>
     </node>
 </doc>

@@ -8,8 +8,8 @@ import com.jogamp.opengl.GLAutoDrawable;
  * Sphere
  */
  public class Sphere extends GeometricNode {
-    public Sphere(String name,Vector3d position,Vector3d orientation,Vector3d scaling) {
-        super(name,position,orientation,scaling);
+    public Sphere(String name,Vector3d position,Vector3d orientation, Vector3d scaling,Vector3d color) {
+        super(name,position,orientation,scaling,color);
     }
      
     @Override

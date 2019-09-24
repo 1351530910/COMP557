@@ -5,7 +5,7 @@ import javax.vecmath.Vector3d;
 
 public class CharacterMaker {
 
-	static public String name = "dude - Chen He 260743776";
+	static public String name = "rainbow worm - Chen He 260743776";
 	
 	/** 
 	 * Creates a character.

@@ -9,16 +9,17 @@ import com.jogamp.opengl.*;
 public abstract class GeometricNode extends GraphNode {
 
     Vector3d position;
+    Vector3d orientation;
     Vector3d color;
     Vector3d scaling;
 
-    public GeometricNode(String name,Vector3d position, Vector3d scaling,Vector3d color) {
+    public GeometricNode(String name,Vector3d position,Vector3d orientation, Vector3d scaling,Vector3d color) {
         super(name);
         
         this.position = position;
         this.color = color;
         this.scaling = scaling;
-        
+        this.orientation = orientation;
         if(position==null)
         this.position = new Vector3d(0,0,0);
         if (color==null) {
@@ -26,6 +27,9 @@ public abstract class GeometricNode extends GraphNode {
         }
         if (scaling==null) {
             this.scaling = new Vector3d(1,1,1);
+        }
+        if (orientation==null) {
+            this.orientation = new Vector3d(0,0,0);
         }
     }
 

@@ -105,6 +105,7 @@ public class CharacterFromXML {
 				return new Cube(
 					name, 	//name
 					getVector3dAttr(dataNode,"center"), //center
+					getVector3dAttr(dataNode, "orientation"),
 					getVector3dAttr(dataNode,"scale"), //scaling
 					getVector3dAttr(dataNode,"color")
 					);
@@ -112,6 +113,7 @@ public class CharacterFromXML {
 				return new Sphere(
 					name, 	//name
 					getVector3dAttr(dataNode,"center"), //center
+					getVector3dAttr(dataNode, "orientation"),
 					getVector3dAttr(dataNode,"scale"), //scaling
 					getVector3dAttr(dataNode,"color")
 					);		
@@ -119,6 +121,7 @@ public class CharacterFromXML {
 					return new Teapot(
 						name, 	//name
 						getVector3dAttr(dataNode,"center"), //center
+						getVector3dAttr(dataNode, "orientation"),
 						getVector3dAttr(dataNode,"scale"), //scaling
 						getVector3dAttr(dataNode,"color")
 						);		

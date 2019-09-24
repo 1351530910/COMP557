@@ -63,6 +63,8 @@ public class CanvasRecorder {
     	}
     	
         // write the frame
+        File dir = new File("stills");
+			if(!dir.exists()) dir.mkdir();
         File file = new File( "stills/" + dumpName + format.format(nextFrameNum) + ".png" );                                             
         nextFrameNum++;
         file = new File(file.getAbsolutePath().trim());

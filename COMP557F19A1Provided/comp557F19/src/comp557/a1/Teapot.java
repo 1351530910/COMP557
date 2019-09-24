@@ -10,8 +10,8 @@ import com.jogamp.opengl.GLAutoDrawable;
  */
 public class Teapot extends GeometricNode{
 
-    public Teapot(String name,Vector3d position,Vector3d orientation,Vector3d scaling) {
-        super(name,position,orientation,scaling);
+    public Teapot(String name,Vector3d position,Vector3d orientation, Vector3d scaling,Vector3d color) {
+        super(name,position,orientation,scaling,color);
     }
 
     @Override

@@ -10,15 +10,14 @@ import com.jogamp.opengl.GLAutoDrawable;
  */
 public class Cube extends GeometricNode{
 
-    public Cube(String name,Vector3d position,Vector3d orientation,Vector3d scaling) {
-        super(name,position,orientation,scaling);
+    public Cube(String name,Vector3d position,Vector3d orientation, Vector3d scaling,Vector3d color) {
+      super(name,position,orientation,scaling,color);
     }
 
 
     @Override
     public void drawForm() {
 		
-		glut.glutSolidCube(1);
+		  glut.glutSolidCube(1);
     }
-
 }
