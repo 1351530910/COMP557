@@ -194,6 +194,8 @@ public class DOFCamera {
      */
     public void setupViewingTransformation( GLAutoDrawable drawable, int i ) {
     	GL2 gl = drawable.getGL().getGL2();
+		
+		
 
     	// TODO OBJECTIVE 1: Set up the viewing transformation
     	// TODO OBJECTIVE 7: revisit this function for shifted perspective projection, if necessary
