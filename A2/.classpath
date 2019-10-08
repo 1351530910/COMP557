@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jogamp-fat.jar"/>
+	<classpathentry kind="lib" path="lib/jogamp-fat.jar" sourcepath="lib/jogamp-fat-java-src.zip"/>
 	<classpathentry kind="lib" path="lib/mintools.jar"/>
 	<classpathentry kind="lib" path="lib/vecmath.jar"/>
 	<classpathentry kind="output" path="bin"/>

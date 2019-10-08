@@ -4,6 +4,13 @@
             "type": "java",
             "name": "CodeLens (Launch) - A2App",
             "request": "launch",
+            "mainClass": "A2App",
+            "projectName": "comp557F19"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - A2App",
+            "request": "launch",
             "mainClass": "comp557.a2.A2App",
             "projectName": "comp557F19"
         },

@@ -1,6 +1,7 @@
 package comp557.a2;
 
 import javax.swing.JPanel;
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
