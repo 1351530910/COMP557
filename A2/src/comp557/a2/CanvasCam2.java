@@ -126,7 +126,9 @@ public class CanvasCam2 implements GLEventListener {
 		
 		gl.glPopMatrix();
 		
-
+		final FancyAxis fa = new FancyAxis();
+		fa.draw(gl);
+		
 // TODO OBJECTIVE 2: Draw sensor frame rectangle with correct modeling transformation
         gl.glPushMatrix();
         gl.glMultMatrixd(Vinv.asArray(),0);
@@ -143,7 +145,7 @@ public class CanvasCam2 implements GLEventListener {
 		glut.glutWireCube(2);
 		gl.glPopMatrix();
 		gl.glEnable( GL2.GL_LIGHTING );
-	
+		
 		gl.glColor3f(1,1,1);
         EasyViewer.beginOverlay(drawable);
         EasyViewer.printTextLines( drawable, "Camera 2 View", 10, 20, 12, GLUT.BITMAP_HELVETICA_18 );
@@ -156,8 +158,7 @@ public class CanvasCam2 implements GLEventListener {
 		
 		
 		// here is some code to draw a fancy axis
-		final FancyAxis fa = new FancyAxis();
-		fa.draw(gl);
+		
 				
 		// Here is some code to draw a red wire cube of size 2
 		

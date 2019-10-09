@@ -143,8 +143,7 @@ public class DOFCamera {
     			if ( ignoreParameterChangeCallback ) return;
     			// TODO OBJECTIVE 4: compute fovy, field of view in the y direction
 
-    			
-    			double value = 0; // change this!
+    			double value = Math.toDegrees(2*Math.atan(21.5/(focalLength.getValue()))); // change this!
 
     			ignoreParameterChangeCallback = true;
     			fovy.setValue(value);
@@ -158,7 +157,7 @@ public class DOFCamera {
     			// TODO OBJECTIVE 4: compute focal length given the field of view in the y direction
     			
     			
-    			double value = 0; // change this!
+    			double value = 21.5/Math.tan(Math.toRadians(fovy.getValue()/2)); // change this!
     			
     			ignoreParameterChangeCallback = true;
     			focalLength.setValue( value );
