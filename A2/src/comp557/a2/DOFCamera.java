@@ -197,9 +197,9 @@ public class DOFCamera {
         double dy = (focusDistance-near.getValue())*oy/near.getValue();
 		gl.glFrustum(
 		 	-ar*nearheight+ox,	//min x
-		 	ar*nearheight+ox,	//max x
+		 	ar*nearheight-ox,	//max x
 		 	-nearheight+oy,	//min y
-		 	nearheight+oy,	//max y
+		 	nearheight-oy,	//max y
 		 	near.getValue(),	//near plane
 		 	far.getValue()		//far plane
 		 	);
@@ -229,6 +229,9 @@ public class DOFCamera {
         fpd.get( p, i, samples.getValue() );
         double ox = s * p.x; // eye offset from center + effective aperture displacement 
         double oy = s * p.y;
+	    Vector3d direction = new Vector3d(lookAt);
+	    direction.sub(eye);
+	    direction.normalize();
 	    
     	glu.gluLookAt(
     		eye.x,eye.y,eye.z,
