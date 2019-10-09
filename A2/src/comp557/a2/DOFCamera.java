@@ -213,7 +213,6 @@ public class DOFCamera {
     			lookAt.x,lookAt.y,lookAt.z,
     			0,1,0
     			);
-    	
     	// TODO OBJECTIVE 1: Set up the viewing transformation
     	// TODO OBJECTIVE 7: revisit this function for shifted perspective projection, if necessary
 
@@ -249,18 +248,22 @@ public class DOFCamera {
 	    gl.glBegin( GL2.GL_LINE_LOOP );
 	    // use gl.glVertex3d calls to specify the 4 corners of the rectangle
 	    
+	    
+	    
 	    double w = drawable.getSurfaceWidth();
 	    double h = drawable.getSurfaceHeight();
 	    double ar = w/h;
 	    
-	    double minx = -ar*near.getValue()/Math.tan(Math.toRadians(fovy.getValue()));	//min x
-	 	double maxx = ar*near.getValue()/Math.tan(Math.toRadians(fovy.getValue()))-2;	//max x
-	 	double miny = -near.getValue()/Math.tan(Math.toRadians(fovy.getValue()));	//min y
-	 	double maxy = near.getValue()/Math.tan(Math.toRadians(fovy.getValue()));	//max y
+	    double minx = -ar*focusDistance/Math.tan(Math.toRadians(fovy.getValue()));	//min x
+	 	double maxx = ar*focusDistance/Math.tan(Math.toRadians(fovy.getValue()));	//max x
+	 	double miny = -focusDistance/Math.tan(Math.toRadians(fovy.getValue()));	//min y
+	 	double maxy = focusDistance/Math.tan(Math.toRadians(fovy.getValue()));	//max y
 	    
-	 	
+	 	minx = -ar;
+	 	maxx = ar;
+	 	miny = -1;
+	 	maxy = 1;
 	 	gl.glVertex3d(maxx, miny, near.getValue());
-
 	 	gl.glVertex3d(maxx, maxy, near.getValue());
 	 	gl.glVertex3d(minx, maxy, near.getValue());
 	 	gl.glVertex3d(minx, miny, near.getValue());

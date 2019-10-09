@@ -74,9 +74,13 @@ public class CanvasCam2 implements GLEventListener {
         
     @Override
     public void display(GLAutoDrawable drawable) {
+    	
+    	
+    	
     	GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-
+        
+    	
         gl.glMatrixMode( GL2.GL_PROJECTION );
         gl.glLoadIdentity();
         tbc.applyProjectionTransformation(drawable);
@@ -88,26 +92,6 @@ public class CanvasCam2 implements GLEventListener {
         list = scene.display( drawable, list );
                 
 
-        // TODO OBJECTIVE 2: Draw sensor frame rectangle with correct modeling transformation
-//        gl.glMatrixMode( GL2.GL_PROJECTION );
-//	    gl.glLoadIdentity();
-//	    dofCam.setupProjection( drawable, 0 ); // sample zero is unshifted
-//    	
-//	    gl.glMatrixMode( GL2.GL_MODELVIEW );
-//	    gl.glLoadIdentity();
-//	    dofCam.setupViewingTransformation( drawable, 0 ); // sample zero is unshifted
-//	    
-	    dofCam.drawSensorPlane(drawable);
-	    
-	    
-        
-        
-        // TODO OBJECTIVE 3: Draw camera frame and frustum with correct modeling transforms
-	    
-	    //glut.glutSolidCube(10);
-	    
-	    
-        // TODO OBJECTIVE 6: Draw rectangle at the focus distance plane
         
         // Here you are provided with some helper code to extract matrices from OpenGL with
         // glGetDoublev, with help from a FlatMatrix4d (see javadoc), which helps glue 
@@ -118,22 +102,56 @@ public class CanvasCam2 implements GLEventListener {
         final FlatMatrix4d Pinv = new FlatMatrix4d();
         final FlatMatrix4d V = new FlatMatrix4d();
         final FlatMatrix4d Vinv = new FlatMatrix4d();
+        
+
 		
         // Get the V1 and P1 matrices of camera 1, the DOF camera
         gl.glPushMatrix();
         gl.glLoadIdentity();
+        
+        
         dofCam.setupProjection( drawable, 0 );
         gl.glGetDoublev( GL2.GL_MODELVIEW_MATRIX, P.asArray(), 0 );
 		P.reconstitute();
 		Pinv.getBackingMatrix().invert( P.getBackingMatrix() );
 		gl.glLoadIdentity();
+		
+
+		
         dofCam.setupViewingTransformation( drawable, 0 );
         gl.glGetDoublev( GL2.GL_MODELVIEW_MATRIX, V.asArray(), 0 );
 		V.reconstitute();
 		Vinv.getBackingMatrix().invert( V.getBackingMatrix() );
+		
+		
 		gl.glPopMatrix();
 		
-		
+
+// TODO OBJECTIVE 2: Draw sensor frame rectangle with correct modeling transformation
+        gl.glPushMatrix();
+        gl.glMultMatrixd(Vinv.asArray(),0);
+        gl.glMultMatrixd(Pinv.asArray(),0);
+        
+	    dofCam.drawSensorPlane(drawable);
+	    
+        // TODO OBJECTIVE 3: Draw camera frame and frustum with correct modeling transforms
+	    gl.glPushMatrix();
+	    gl.glDisable( GL2.GL_LIGHTING );
+		gl.glColor3f(1,0,0);
+        final GLUT glut = new GLUT();
+        
+		glut.glutWireCube(2);
+		gl.glPopMatrix();
+		gl.glEnable( GL2.GL_LIGHTING );
+	
+		gl.glColor3f(1,1,1);
+        EasyViewer.beginOverlay(drawable);
+        EasyViewer.printTextLines( drawable, "Camera 2 View", 10, 20, 12, GLUT.BITMAP_HELVETICA_18 );
+        gl.glEnable( GL2.GL_LIGHTING );
+	    
+        // TODO OBJECTIVE 6: Draw rectangle at the focus distance plane
+        
+	    gl.glPopMatrix();
 		
 		
 		
@@ -142,19 +160,7 @@ public class CanvasCam2 implements GLEventListener {
 		fa.draw(gl);
 				
 		// Here is some code to draw a red wire cube of size 2
-		gl.glDisable( GL2.GL_LIGHTING );
-		gl.glColor3f(1,0,0);
-        final GLUT glut = new GLUT();
-		glut.glutWireCube(2);
-		gl.glEnable( GL2.GL_LIGHTING );
-	
 		
-		
-		
-		gl.glColor3f(1,1,1);
-        EasyViewer.beginOverlay(drawable);
-        EasyViewer.printTextLines( drawable, "Camera 2 View", 10, 20, 12, GLUT.BITMAP_HELVETICA_18 );
-        gl.glEnable( GL2.GL_LIGHTING );
         EasyViewer.endOverlay(drawable);
     }    
     
