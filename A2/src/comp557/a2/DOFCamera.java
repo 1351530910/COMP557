@@ -181,10 +181,10 @@ public class DOFCamera {
 	    double ar = w/h;
     	
 		 gl.glFrustum(
-		 	-ar*near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),	//min x
-		 	ar*near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),	//max x
-		 	-near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),	//min y
-		 	near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),	//max y
+		 	-ar*near.getValue()*Math.tan(Math.toRadians(fovy.getValue())),	//min x
+		 	ar*near.getValue()*Math.tan(Math.toRadians(fovy.getValue())),	//max x
+		 	-near.getValue()*Math.tan(Math.toRadians(fovy.getValue())),	//min y
+		 	near.getValue()*Math.tan(Math.toRadians(fovy.getValue())),	//max y
 		 	near.getValue(),	//near plane
 		 	far.getValue()		//far plane
 		 	);
@@ -253,19 +253,24 @@ public class DOFCamera {
 	    double h = drawable.getSurfaceHeight();
 	    double ar = w/h;
 	    
-	    double minx = -ar*focusDistance/Math.tan(Math.toRadians(fovy.getValue()));	//min x
-	 	double maxx = ar*focusDistance/Math.tan(Math.toRadians(fovy.getValue()));	//max x
-	 	double miny = -focusDistance/Math.tan(Math.toRadians(fovy.getValue()));	//min y
-	 	double maxy = focusDistance/Math.tan(Math.toRadians(fovy.getValue()));	//max y
+
+	 	double fl = focalLength.getValue()/1000.0;
+	 	
+	 	
+	    double minx = -ar*fl*Math.tan(Math.toRadians(fovy.getValue()));	//min x
+	 	double maxx = ar*fl*Math.tan(Math.toRadians(fovy.getValue()));	//max x
+	 	double miny = -fl*Math.tan(Math.toRadians(fovy.getValue()));	//min y
+	 	double maxy = fl*Math.tan(Math.toRadians(fovy.getValue()));	//max y
 	    
-	 	minx = -ar;
-	 	maxx = ar;
-	 	miny = -1;
-	 	maxy = 1;
-	 	gl.glVertex3d(maxx, miny, near.getValue());
-	 	gl.glVertex3d(maxx, maxy, near.getValue());
-	 	gl.glVertex3d(minx, maxy, near.getValue());
-	 	gl.glVertex3d(minx, miny, near.getValue());
+	 	
+//	 	minx = -ar;
+//	 	maxx = ar;
+//	 	miny = -1;
+//	 	maxy = 1;
+	 	gl.glVertex3d(maxx, miny, -fl);
+	 	gl.glVertex3d(maxx, maxy, -fl);
+	 	gl.glVertex3d(minx, maxy, -fl);
+	 	gl.glVertex3d(minx, miny, -fl);
 
 	    gl.glEnd();
 	    gl.glPopMatrix();

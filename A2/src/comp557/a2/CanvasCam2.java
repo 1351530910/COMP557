@@ -8,6 +8,7 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
@@ -25,6 +26,7 @@ public class CanvasCam2 implements GLEventListener {
 
 	GLCanvas glCanvas;
 	GLUT glut = new GLUT();
+	GLU glu = new GLU();
 
 	private Scene scene;
 	    
@@ -127,17 +129,21 @@ public class CanvasCam2 implements GLEventListener {
 		gl.glPopMatrix();
 		
 		final FancyAxis fa = new FancyAxis();
-		fa.draw(gl);
+		
 		
 // TODO OBJECTIVE 2: Draw sensor frame rectangle with correct modeling transformation
-        gl.glPushMatrix();
-        gl.glMultMatrixd(Vinv.asArray(),0);
-        gl.glMultMatrixd(Pinv.asArray(),0);
         
+		
+		
+		gl.glPushMatrix();
+        gl.glMultMatrixd(Vinv.asArray(),0);
+        
+        fa.draw(gl);
 	    dofCam.drawSensorPlane(drawable);
 	    
         // TODO OBJECTIVE 3: Draw camera frame and frustum with correct modeling transforms
 	    gl.glPushMatrix();
+	    gl.glMultMatrixd(Pinv.asArray(),0);
 	    gl.glDisable( GL2.GL_LIGHTING );
 		gl.glColor3f(1,0,0);
         final GLUT glut = new GLUT();
@@ -155,12 +161,6 @@ public class CanvasCam2 implements GLEventListener {
         
 	    gl.glPopMatrix();
 		
-		
-		
-		// here is some code to draw a fancy axis
-		
-				
-		// Here is some code to draw a red wire cube of size 2
 		
         EasyViewer.endOverlay(drawable);
     }    
