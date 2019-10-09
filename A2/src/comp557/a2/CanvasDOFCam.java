@@ -50,7 +50,7 @@ public class CanvasDOFCam implements GLEventListener, Interactor {
     private boolean lookAtSelectRequest = false;
     
     /** Helper to identify image points in world coordiantes */
-    private Selector selector = new Selector();
+    public static Selector selector = new Selector();
     
     /** Display list ID for quickly drawing the static scene geometry */
     private int list = -1;

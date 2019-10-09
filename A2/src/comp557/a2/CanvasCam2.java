@@ -141,13 +141,13 @@ public class CanvasCam2 implements GLEventListener {
         fa.draw(gl);
 	    dofCam.drawSensorPlane(drawable);
 	    dofCam.drawFocusPlane(drawable);
-	    
-        // TODO OBJECTIVE 3: Draw camera frame and frustum with correct modeling transforms
+	    dofCam.drawAperture(drawable);
+        
+	 // TODO OBJECTIVE 3: Draw camera frame and frustum with correct modeling transforms
 	    gl.glPushMatrix();
 	    gl.glMultMatrixd(Pinv.asArray(),0);
 	    gl.glDisable( GL2.GL_LIGHTING );
 		gl.glColor3f(1,0,0);
-        final GLUT glut = new GLUT();
         
 		glut.glutWireCube(2);
 		gl.glPopMatrix();
