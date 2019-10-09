@@ -132,9 +132,13 @@ public class CanvasDOFCam implements GLEventListener, Interactor {
 	    list = scene.display( drawable, list );
         
 	    if ( focusSelectRequest ) {
-        	focusSelectRequest = false;
-        	if ( selector.select( drawable, mousePoint ) ) {
-        		dofCam.focusPoint.set( selector.selectedPoint );
+	        focusSelectRequest = false;
+	        if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+	            mousePoint.x *= 2;
+	            mousePoint.y *= 2;
+	        }
+	        if ( selector.select( drawable, mousePoint ) ) {
+	            dofCam.focusPoint.set( selector.selectedPoint );
         		
         		// TODO OBJECTIVE 5: Set the desired focus distance based on the selected point in the world
 

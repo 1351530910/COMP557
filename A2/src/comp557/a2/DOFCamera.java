@@ -1,7 +1,6 @@
 package comp557.a2;
 
 import javax.swing.JPanel;
-import javax.vecmath.Matrix4d;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -9,6 +8,8 @@ import javax.vecmath.Vector3d;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 import mintools.parameters.BooleanParameter;
 import mintools.parameters.DoubleParameter;
@@ -69,6 +70,9 @@ public class DOFCamera {
 	
     /** Helper class for creating a number of Poisson disk random samples in a region */
     private final FastPoissonDisk fpd = new FastPoissonDisk();
+    
+    GLU glu = new GLU();
+    GLUT glut = new GLUT();
     
     /**
      * Gentle temporal filtering of the look at point, eye position, and focus distance
@@ -173,17 +177,24 @@ public class DOFCamera {
     public void setupProjection( GLAutoDrawable drawable, int i ) {
     	GL2 gl = drawable.getGL().getGL2();
 		
-		gl.glFrustum(
-			near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),
-			 -near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),
-			  -near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),
-			   near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),
-				near.getValue(),
-				 far.getValue()
-				 );
-    	// TODO OBJECTIVE 1: Compute parameters to call glFrustum
-    	// TODO OBJECTIVE 7: revisit this function for shifted perspective projection
+    	double w = drawable.getSurfaceWidth();
+	    double h = drawable.getSurfaceHeight();
+	    double ar = w/h;
     	
+		 gl.glFrustum(
+		 	-ar*near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),	//min x
+		 	ar*near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),	//max x
+		 	-near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),	//min y
+		 	near.getValue()/Math.tan(Math.toRadians(fovy.getValue())),	//max y
+		 	near.getValue(),	//near plane
+		 	far.getValue()		//far plane
+		 	);
+
+		//gl.glFrustum(-ar,ar,-1,1,near.getValue(),far.getValue());
+		
+    	// TODO OBJECTIVE 1: Compute parameters to call glFrustum
+		// TODO OBJECTIVE 7: revisit this function for shifted perspective projection
+		
     }
     
     
@@ -195,9 +206,14 @@ public class DOFCamera {
      */
     public void setupViewingTransformation( GLAutoDrawable drawable, int i ) {
     	GL2 gl = drawable.getGL().getGL2();
-		
-		
-
+    	
+    	
+    	glu.gluLookAt(
+    			eye.x,eye.y,eye.z,
+    			lookAt.x,lookAt.y,lookAt.z,
+    			0,1,0
+    			);
+    	
     	// TODO OBJECTIVE 1: Set up the viewing transformation
     	// TODO OBJECTIVE 7: revisit this function for shifted perspective projection, if necessary
 
@@ -232,6 +248,23 @@ public class DOFCamera {
     	gl.glDisable( GL2.GL_LIGHTING );
 	    gl.glBegin( GL2.GL_LINE_LOOP );
 	    // use gl.glVertex3d calls to specify the 4 corners of the rectangle
+	    
+	    double w = drawable.getSurfaceWidth();
+	    double h = drawable.getSurfaceHeight();
+	    double ar = w/h;
+	    
+	    double minx = -ar*near.getValue()/Math.tan(Math.toRadians(fovy.getValue()));	//min x
+	 	double maxx = ar*near.getValue()/Math.tan(Math.toRadians(fovy.getValue()))-2;	//max x
+	 	double miny = -near.getValue()/Math.tan(Math.toRadians(fovy.getValue()));	//min y
+	 	double maxy = near.getValue()/Math.tan(Math.toRadians(fovy.getValue()));	//max y
+	    
+	 	
+	 	gl.glVertex3d(maxx, miny, near.getValue());
+
+	 	gl.glVertex3d(maxx, maxy, near.getValue());
+	 	gl.glVertex3d(minx, maxy, near.getValue());
+	 	gl.glVertex3d(minx, miny, near.getValue());
+
 	    gl.glEnd();
 	    gl.glPopMatrix();
     }

@@ -24,6 +24,7 @@ import mintools.viewer.TrackBallCamera;
 public class CanvasCam2 implements GLEventListener {
 
 	GLCanvas glCanvas;
+	GLUT glut = new GLUT();
 
 	private Scene scene;
 	    
@@ -88,7 +89,24 @@ public class CanvasCam2 implements GLEventListener {
                 
 
         // TODO OBJECTIVE 2: Draw sensor frame rectangle with correct modeling transformation
+//        gl.glMatrixMode( GL2.GL_PROJECTION );
+//	    gl.glLoadIdentity();
+//	    dofCam.setupProjection( drawable, 0 ); // sample zero is unshifted
+//    	
+//	    gl.glMatrixMode( GL2.GL_MODELVIEW );
+//	    gl.glLoadIdentity();
+//	    dofCam.setupViewingTransformation( drawable, 0 ); // sample zero is unshifted
+//	    
+	    dofCam.drawSensorPlane(drawable);
+	    
+	    
+        
+        
         // TODO OBJECTIVE 3: Draw camera frame and frustum with correct modeling transforms
+	    
+	    //glut.glutSolidCube(10);
+	    
+	    
         // TODO OBJECTIVE 6: Draw rectangle at the focus distance plane
         
         // Here you are provided with some helper code to extract matrices from OpenGL with
