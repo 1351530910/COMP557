@@ -140,6 +140,7 @@ public class CanvasCam2 implements GLEventListener {
         
         fa.draw(gl);
 	    dofCam.drawSensorPlane(drawable);
+	    dofCam.drawFocusPlane(drawable);
 	    
         // TODO OBJECTIVE 3: Draw camera frame and frustum with correct modeling transforms
 	    gl.glPushMatrix();

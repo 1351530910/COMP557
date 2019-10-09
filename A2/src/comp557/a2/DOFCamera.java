@@ -179,6 +179,8 @@ public class DOFCamera {
     	double w = drawable.getSurfaceWidth();
 	    double h = drawable.getSurfaceHeight();
 	    double ar = w/h;
+	    
+	    
     	
 		 gl.glFrustum(
 		 	-ar*near.getValue()*Math.tan(Math.toRadians(fovy.getValue())),	//min x
@@ -228,7 +230,36 @@ public class DOFCamera {
     	GL2 gl = drawable.getGL().getGL2();
 
     	// TODO OBJECTIVE 6: Draw the focus plane rectangle
+    	
+	    gl.glColor3f(0,0,1); 
+    	gl.glPushMatrix();
+    	gl.glDisable( GL2.GL_LIGHTING );
+	    gl.glBegin( GL2.GL_LINE_LOOP );
+	    // use gl.glVertex3d calls to specify the 4 corners of the rectangle
+	    
+	    
+	    
+	    double w = drawable.getSurfaceWidth();
+	    double h = drawable.getSurfaceHeight();
+	    double ar = w/h;
+	    
+	    
+	    double minx = -ar*focusDistance*Math.tan(Math.toRadians(fovy.getValue()));	//min x
+	 	double maxx = ar*focusDistance*Math.tan(Math.toRadians(fovy.getValue()));	//max x
+	 	double miny = -focusDistance*Math.tan(Math.toRadians(fovy.getValue()));	//min y
+	 	double maxy = focusDistance*Math.tan(Math.toRadians(fovy.getValue()));	//max y
+	    
+//	 	minx = -ar;
+//	 	maxx = ar;
+//	 	miny = -1;
+//	 	maxy = 1;
+	 	gl.glVertex3d(maxx, miny, -focusDistance);
+	 	gl.glVertex3d(maxx, maxy, -focusDistance);
+	 	gl.glVertex3d(minx, maxy, -focusDistance);
+	 	gl.glVertex3d(minx, miny, -focusDistance);
 
+	    gl.glEnd();
+	    gl.glPopMatrix();
     }
 
     /** 
@@ -247,22 +278,17 @@ public class DOFCamera {
 	    gl.glBegin( GL2.GL_LINE_LOOP );
 	    // use gl.glVertex3d calls to specify the 4 corners of the rectangle
 	    
-	    
-	    
 	    double w = drawable.getSurfaceWidth();
 	    double h = drawable.getSurfaceHeight();
 	    double ar = w/h;
 	    
-
-	 	double fl = focalLength.getValue()/1000.0;
-	 	
-	 	
-	    double minx = -ar*fl*Math.tan(Math.toRadians(fovy.getValue()));	//min x
-	 	double maxx = ar*fl*Math.tan(Math.toRadians(fovy.getValue()));	//max x
-	 	double miny = -fl*Math.tan(Math.toRadians(fovy.getValue()));	//min y
-	 	double maxy = fl*Math.tan(Math.toRadians(fovy.getValue()));	//max y
+	    //convert to meter
+	    double fl = focalLength.getValue()/1000;
+	    double minx = -ar*sensorHeight.getValue()/1000;	//min x
+	 	double maxx = ar*sensorHeight.getValue()/1000;	//max x
+	 	double miny = -sensorHeight.getValue()/1000;	//min y
+	 	double maxy = sensorHeight.getValue()/1000;	//max y
 	    
-	 	
 //	 	minx = -ar;
 //	 	maxx = ar;
 //	 	miny = -1;
