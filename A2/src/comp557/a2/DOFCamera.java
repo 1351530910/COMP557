@@ -68,11 +68,16 @@ public class DOFCamera {
 
 	BooleanParameter drawWithBlur = new BooleanParameter("draw with DOF blur", false );
 	
+	double focush = 0;
+	double focusL = 0;
+	
     /** Helper class for creating a number of Poisson disk random samples in a region */
     private final FastPoissonDisk fpd = new FastPoissonDisk();
     
     GLU glu = new GLU();
     GLUT glut = new GLUT();
+    
+    //static DOFCamera backupCamera = new DOFCamera();
     
     /**
      * Gentle temporal filtering of the look at point, eye position, and focus distance
@@ -94,16 +99,21 @@ public class DOFCamera {
     	
 		if ( dollyFocus.getValue() ) {
 	    	// TODO OBJECTIVE 8: Set the focusDistance based on the dolly
+			focusDistance -=  (focusL-dolly.getValue())/2;
 
-
+		}else {
+			focusL = dolly.getValue();
 		}
 		
 		if ( dollyZoom.getValue() ) {
 			// TODO OBJECTIVE 8: Set the focal length based on the dolly
 			// Hint: store the size (e.g., height) of the focus plane rectangle
 			// and make sure it stays constant with respect to the other parameters
-
+			fovy.setValue(2*Math.toDegrees(Math.atan(focush/focusDistance)));
+		}else {
+			focush = focusDistance*Math.tan(Math.toRadians(fovy.getValue()/2));
 		}
+		
     }
 	
     /** Used to let dependent parameters update one another */
@@ -203,12 +213,12 @@ public class DOFCamera {
     public void setupViewingTransformation( GLAutoDrawable drawable, int i ) {
     	GL2 gl = drawable.getGL().getGL2();
     	
-    	//
+    	//project the lookat point on the focus plane
 	    Vector3d direction = new Vector3d(lookAt);
 	    direction.sub(eye);
 	    direction.normalize();
 	    double scale = focusDistance;
-	    direction = new Vector3d(direction.x*scale,direction.y*scale,direction.z*scale);
+	    direction.scale(scale);
 	    direction.add(eye);
 	    
 	    final Point2d p = new Point2d();
