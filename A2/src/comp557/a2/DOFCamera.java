@@ -181,36 +181,16 @@ public class DOFCamera {
 	    double h = drawable.getSurfaceHeight();
 	    double ar = w/h;
 	    
-	    Point2d diff = new Point2d(0,0);
-	    //fpd.get(diff, i, samples.getValue());
-	    
-	    double nearheight = near.getValue()*Math.tan(Math.toRadians(fovy.getValue()));
-		 
-	    final Point2d p = new Point2d();
-        double s = getEffectivePupilRadius();
-    	
-        fpd.get( p, i, samples.getValue() );
-        double ox = s * p.x; // eye offset from center + effective aperture displacement 
-        double oy = s * p.y;
-	    
-        double dx = (focusDistance-near.getValue())*ox/near.getValue();
-        double dy = (focusDistance-near.getValue())*oy/near.getValue();
-		gl.glFrustum(
-		 	-ar*nearheight+ox,	//min x
-		 	ar*nearheight-ox,	//max x
-		 	-nearheight+oy,	//min y
-		 	nearheight-oy,	//max y
+	    double nearheight = near.getValue()*Math.tan(Math.toRadians(fovy.getValue())/2);
+		
+	    gl.glFrustum(
+		 	-ar*nearheight,	//min x
+		 	ar*nearheight,	//max x
+		 	-nearheight,	//min y
+		 	nearheight,	//max y
 		 	near.getValue(),	//near plane
 		 	far.getValue()		//far plane
 		 	);
-		 
-		 
-		
-		//gl.glFrustum(-ar,ar,-1,1,near.getValue(),far.getValue());
-		
-    	// TODO OBJECTIVE 1: Compute parameters to call glFrustum
-		// TODO OBJECTIVE 7: revisit this function for shifted perspective projection
-		
     }
     
     
@@ -223,19 +203,23 @@ public class DOFCamera {
     public void setupViewingTransformation( GLAutoDrawable drawable, int i ) {
     	GL2 gl = drawable.getGL().getGL2();
     	
-    	final Point2d p = new Point2d();
-        double s = getEffectivePupilRadius();
-    	
-        fpd.get( p, i, samples.getValue() );
-        double ox = s * p.x; // eye offset from center + effective aperture displacement 
-        double oy = s * p.y;
+    	//
 	    Vector3d direction = new Vector3d(lookAt);
 	    direction.sub(eye);
 	    direction.normalize();
+	    double scale = focusDistance;
+	    direction = new Vector3d(direction.x*scale,direction.y*scale,direction.z*scale);
+	    direction.add(eye);
+	    
+	    final Point2d p = new Point2d();
+        double s = getEffectivePupilRadius();
+	    fpd.get( p, i, samples.getValue() );
+	    double ox = s * p.x; // eye offset from center + effective aperture displacement 
+	    double oy = s * p.y;
 	    
     	glu.gluLookAt(
-    		eye.x,eye.y,eye.z,
-    		lookAt.x,lookAt.y,lookAt.z,
+    		eye.x+ox,eye.y+oy,eye.z,
+    		direction.x,direction.y,direction.z,
     		0,1,0
    			);
     	
@@ -270,15 +254,11 @@ public class DOFCamera {
 	    double ar = w/h;
 	    
 	    
-	    double minx = -ar*focusDistance*Math.tan(Math.toRadians(fovy.getValue()));	//min x
-	 	double maxx = ar*focusDistance*Math.tan(Math.toRadians(fovy.getValue()));	//max x
-	 	double miny = -focusDistance*Math.tan(Math.toRadians(fovy.getValue()));	//min y
-	 	double maxy = focusDistance*Math.tan(Math.toRadians(fovy.getValue()));	//max y
+	    double minx = -ar*focusDistance*Math.tan(Math.toRadians(fovy.getValue()/2));	//min x
+	 	double maxx = ar*focusDistance*Math.tan(Math.toRadians(fovy.getValue()/2));	//max x
+	 	double miny = -focusDistance*Math.tan(Math.toRadians(fovy.getValue()/2));	//min y
+	 	double maxy = focusDistance*Math.tan(Math.toRadians(fovy.getValue()/2));	//max y
 	    
-//	 	minx = -ar;
-//	 	maxx = ar;
-//	 	miny = -1;
-//	 	maxy = 1;
 	 	gl.glVertex3d(maxx, miny, -focusDistance);
 	 	gl.glVertex3d(maxx, maxy, -focusDistance);
 	 	gl.glVertex3d(minx, maxy, -focusDistance);

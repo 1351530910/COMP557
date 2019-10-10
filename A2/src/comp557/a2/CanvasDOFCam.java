@@ -8,6 +8,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import javax.vecmath.Point4d;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4f;
 
 import com.jogamp.opengl.DebugGL2;
@@ -145,9 +146,13 @@ public class CanvasDOFCam implements GLEventListener, Interactor {
 	            dofCam.focusPoint.set( selector.selectedPoint );
         		
         		// TODO OBJECTIVE 5: Set the desired focus distance based on the selected point in the world
+	            Vector3d eyedir = new Vector3d(dofCam.lookAt);
+	            eyedir.sub(dofCam.eye);
+	            eyedir.normalize();
+	            Vector3d proj = new Vector3d(selector.selectedPoint);
+	            proj.sub(dofCam.eye);
 	            
-	            
-        		double val = dofCam.eye.distance(selector.selectedPoint); // change this!
+        		double val = eyedir.dot(proj); // change this!
         		dofCam.focusDesired.setValue( val );
         	}
         }
