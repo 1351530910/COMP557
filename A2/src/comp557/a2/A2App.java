@@ -51,7 +51,7 @@ public class A2App {
         controlFrame.setLocation(size.width + 20, 0);
         controlFrame.setVisible(true);    
         
-        JFrame jframe = new JFrame( "Comp 557 Assignment 2 Dolly Zoom and Focus - YOUR NAME HERE" );
+        JFrame jframe = new JFrame( "Comp 557 Assignment 2 Dolly Zoom and Focus - Chen He 260743776" );
         jframe.addWindowListener( new WindowAdapter() {
             @Override
             public void windowClosing( WindowEvent e ) {
