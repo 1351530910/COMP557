@@ -82,6 +82,7 @@ public class HEDS {
         for (HalfEdge he : halfEdges.values()) {
             he.head.n.add(he.leftFace.n);
             facePerVertex[vertices.indexOf(he.head)]++;
+            he.head.he = he;
         }
 
         for (int i = 0; i < vertices.size(); i++) {
@@ -216,13 +217,43 @@ public class HEDS {
 	 * by the vertex area (see heat solve objective requirements).
      */
     public void computeLaplacian() {
+        //compute area of each vertex
+        for (HalfEdge he : halfEdges.values()) {
+            he.head.area += he.leftFace.area;
+        }
+        
+        double oneThird = 1.0/3.0;
     	for ( Vertex v : vertices ) {
     		// TODO: 6 Compute the Laplacian and store as vertex weights, and cotan operator diagonal LCii and off diagonal LCij terms.
-    		v.area = 0;
+    		v.area *= oneThird;
     		v.LCii = 0;
     		v.LCij = new double[ v.valence() ];
 
-    		
+            double sum = 0;
+            HalfEdge he;
+            Vertex i,b,j,a; //to match the slides
+            Vector3d ib,jb,ja,ia,ij;
+            double alpha,beta;
+            he = v.he;
+            for (int index = 0; index < v.LCij.length; index++) {
+                i = v;
+                j = he.twin.head;
+                a = he.next.next.head;
+                b = he.twin.next.next.head;
+                ib = v3f.minus(b, i);
+                jb = v3f.minus(b, j);
+                ja = v3f.minus(a, j);
+                ia = v3f.minus(a, i);
+                ij = v3f.minus(j, i);
+                alpha = v3f.dot(ja, ia)/ja.length()/ia.length();
+                beta = v3f.dot(ib, jb)/ib.length()/jb.length();
+
+                v.LCij[index] = (1/Math.tan(alpha)+1/Math.tan(beta))
+                
+                
+            }
+            
+            v.LCii = sum/2/v.area;
     		
     		
     		

@@ -60,7 +60,7 @@ public class MeshDrawHeatGeo {
 	private int uLightPosID;
 	private int uLightColorID;
 	private int uMaterialDiffuseID;
-	
+	private int phong;
 	/** Attribute IDs for the GLSL programs (i.e., "in" declarations of the vertex program) */ 
 	private int attribVertexID = 0;
 	private int attribNormalID = 0;
@@ -94,11 +94,12 @@ public class MeshDrawHeatGeo {
     	uModelviewID = state.getUniformLocation(gl, "modelview");    	
     	uLightPosID = state.getUniformLocation(gl, "lightCamSpacePosition");
     	uLightColorID = state.getUniformLocation(gl, "lightColor");
-    	uMaterialDiffuseID = state.getUniformLocation(gl, "materialDiffuse");
+		uMaterialDiffuseID = state.getUniformLocation(gl, "materialDiffuse");
 		attribVertexID = state.getAttribLocation( gl, "vertex" );
 		attribNormalID = state.getAttribLocation( gl, "normal" );
 		attribUtID = state.getAttribLocation( gl, "ut" );
 		attribPhiID = state.getAttribLocation( gl, "phi" );
+		phong = state.getUniformLocation(gl, "phong");
 		state.useProgram( gl, false );
 	}
 	
@@ -199,7 +200,7 @@ public class MeshDrawHeatGeo {
 		gl.glUniform3fv( uLightPosID, 1, camSpaceLightPos, 0);
 		gl.glUniform3fv( uLightColorID, 1, camSpaceLightColor, 0);
 		gl.glUniform3fv( uMaterialDiffuseID, 1, materialDiffuse, 0);
-		
+		gl.glUniform3f( phong, 1, 1, 1);
 		gl.glEnableVertexAttribArray( attribVertexID );
 		gl.glEnableVertexAttribArray( attribNormalID );
 		if ( attribUtID != -1 ) gl.glEnableVertexAttribArray( attribUtID );

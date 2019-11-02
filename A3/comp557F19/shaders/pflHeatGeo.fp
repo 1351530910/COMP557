@@ -8,6 +8,9 @@ in float phiv;
 uniform vec3 lightCamSpacePosition;
 uniform vec3 lightColor;
 uniform vec3 materialDiffuse;
+uniform vec3 phong;
+
+#define PhongExp 64
 
 void main(void) {
 	
@@ -16,7 +19,10 @@ void main(void) {
 	vec3 l = normalize(lightCamSpacePosition - camSpacePosition);
 
 	// TODO: 4, 11 Implement your GLSL per fragement lighting, heat colouring, and distance stripes here!
-	
+	vec3 bisector = normalize(v+l);
+
+
 	// can use this to initially visualize the normal	
-    gl_FragColor = vec4( n.xyz * 0.5 + vec3( 0.5, 0.5,0.5 ), 1 );
+    gl_FragColor = vec4(vec3(1,0,0)*utv+vec3(0,0,1)*phiv+ materialDiffuse+phong*lightColor*pow(max(0,dot(n,bisector)),PhongExp), 1 );
+	//gl_FragColor = vec4(utv,utv,utv,1);
 }
