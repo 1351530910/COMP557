@@ -23,6 +23,6 @@ void main(void) {
 
 
 	// can use this to initially visualize the normal	
-    gl_FragColor = vec4(vec3(1,0,0)*utv+vec3(0,0,1)*phiv+ materialDiffuse+phong*lightColor*pow(max(0,dot(n,bisector)),PhongExp), 1 );
-	//gl_FragColor = vec4(utv,utv,utv,1);
+    gl_FragColor = vec4(vec3(1,0,0)*utv+vec3(0,0,1)*(1-utv)+ materialDiffuse+phong*lightColor*pow(max(0,dot(n,bisector)),PhongExp), 1 );
+	
 }

@@ -231,32 +231,18 @@ public class HEDS {
 
             double sum = 0;
             HalfEdge he;
-            Vertex i,b,j,a; //to match the slides
-            Vector3d ib,jb,ja,ia,ij;
             double alpha,beta;
             he = v.he;
             for (int index = 0; index < v.LCij.length; index++) {
-                i = v;
-                j = he.twin.head;
-                a = he.next.next.head;
-                b = he.twin.next.next.head;
-                ib = v3f.minus(b, i);
-                jb = v3f.minus(b, j);
-                ja = v3f.minus(a, j);
-                ia = v3f.minus(a, i);
-                ij = v3f.minus(j, i);
-                alpha = v3f.dot(ja, ia)/ja.length()/ia.length();
-                beta = v3f.dot(ib, jb)/ib.length()/jb.length();
-
-                v.LCij[index] = (1/Math.tan(alpha)+1/Math.tan(beta))
+                alpha = angleWithNext(he.twin.next);
+                beta = angleWithNext(he.next);
                 
-                
+                v.LCij[index] = (1/Math.tan(alpha)+1/Math.tan(beta))*(he.twin.head.ut-he.head.ut);
+                v.LCii += v.LCij[index];
+                he = he.twin.next;
             }
             
             v.LCii = sum/2/v.area;
-    		
-    		
-    		
     	}
     }
     
@@ -267,10 +253,9 @@ public class HEDS {
      */
     private double angleWithNext( HalfEdge he ) {
     	// TODO: 6 Implement this function to compute the angle with next edge... you'll want to use this in a few places
-
-
-    	
-    	return 0;
+        Point3d a = he.head.p,b = he.next.head.p,c = he.next.next.head.p;
+        Vector3d ab = v3f.minus(b, a), cb = v3f.minus(b, c);
+        return v3f.dot(ab,cb)/ab.length()/cb.length();
     }
     
     /**
