@@ -140,7 +140,7 @@ public class HEDS {
     			if ( v.constrained ) continue;  // do nothing for the constrained vertex!
     			
     			// TODO: 7 write inner loop code for the PGS heat solve
-    			
+    			//v.ut = v.u0/(v.area-)
     			
     			
     		}	
@@ -237,7 +237,7 @@ public class HEDS {
                 alpha = angleWithNext(he.twin.next);
                 beta = angleWithNext(he.next);
                 
-                v.LCij[index] = (1/Math.tan(alpha)+1/Math.tan(beta))*(he.twin.head.ut-he.head.ut);
+                v.LCij[index] = (1/Math.tan(alpha)+1/Math.tan(beta))*(he.twin.head.u0-he.head.u0);
                 v.LCii += v.LCij[index];
                 he = he.twin.next;
             }
