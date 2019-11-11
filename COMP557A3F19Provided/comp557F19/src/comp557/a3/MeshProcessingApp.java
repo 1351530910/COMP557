@@ -46,7 +46,7 @@ public class MeshProcessingApp implements SceneGraphNode, Interactor {
     private HalfEdge currentHE;
     
     /** index to identify which soup file should be loaded (used by keyboard controls) */
-    private int whichSoup = 0;
+    private int whichSoup = 1;
     
     private String[] soupFiles = {
     		"meshdata/bunnyLowRes.obj",

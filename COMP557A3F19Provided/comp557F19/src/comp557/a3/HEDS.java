@@ -1,6 +1,7 @@
 package comp557.a3;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -21,27 +22,72 @@ public class HEDS {
     ArrayList<Face> faces = new ArrayList<Face>();
     
     /** List of vertices */
-    ArrayList<Vertex> vertices;
+    public static ArrayList<Vertex> vertices;
 
     /** Convenience member for keeping track of half edges you make or need */
     Map<String,HalfEdge> halfEdges = new TreeMap<String,HalfEdge>();
-    
+    public static int facePerVertex[];
     /**
      * Builds a half edge data structure from the polygon soup   
      * @param soup
      */
     public HEDS( PolygonSoup soup ) {
         vertices = soup.vertexList;
-        for ( int[] face : soup.faceList ) {        
+        for ( int[] f : soup.faceList ) {        
         	// TODO: 2 Build the half edge data structure from the polygon soup, triangulating non-triangular faces
 
-        
-        	
+            //triangulation
+            int[][] faceList = new int[f.length-2][3];
+            for (int i = 0; i < faceList.length; i++) {
+                faceList[i][0] = f[0];
+                faceList[i][1] = f[i+1];
+                faceList[i][2] = f[i+2];
+            }
+
+            for (int[] face : faceList) {
+                int i = face[face.length - 1];
+                int j = face[0];
+                HalfEdge he = new HalfEdge();
+                halfEdges.put(i+","+j, he);
+                HalfEdge firstEdge = he;
+                he.head = soup.vertexList.get(j);
+                he.twin = halfEdges.get(j+","+i);
+                if (he.twin != null) {
+                    he.twin.twin = he;
+                }
+                for (int k = 1; k < face.length; k++) {
+                    i = j;
+                    j = face[k];
+                    HalfEdge next = new HalfEdge();
+                    halfEdges.put(i+","+j, next);
+                    next.head = soup.vertexList.get(j);
+                    next.twin = halfEdges.get(j+","+i);
+                    if (next.twin != null) {
+                        next.twin.twin = next;
+                    }
+                    he.next = next;
+                    he = next;
+                }
+                he.next = firstEdge;
+                faces.add(new Face(firstEdge));
+            }
         }
         
         // TODO: 3 Compute vertex normals
-        
-        
+        facePerVertex = new int[vertices.size()];
+        for (Vertex v : vertices){
+            v.n = new Vector3d(0,0,0);
+        }
+
+        for (HalfEdge he : halfEdges.values()) {
+            he.head.n.add(he.leftFace.n);
+            facePerVertex[vertices.indexOf(he.head)]++;
+            he.head.he = he;
+        }
+
+        for (int i = 0; i < vertices.size(); i++) {
+            vertices.get(i).n.scale(1.0/facePerVertex[i]);
+        }
         
     }
     
@@ -94,7 +140,7 @@ public class HEDS {
     			if ( v.constrained ) continue;  // do nothing for the constrained vertex!
     			
     			// TODO: 7 write inner loop code for the PGS heat solve
-    			
+    			//v.ut = v.u0/(v.area-)
     			
     			
     		}	
@@ -171,16 +217,29 @@ public class HEDS {
 	 * by the vertex area (see heat solve objective requirements).
      */
     public void computeLaplacian() {
+        //compute area of each vertex
+        
+        
+        double oneThird = 1.0/3.0;
     	for ( Vertex v : vertices ) {
     		// TODO: 6 Compute the Laplacian and store as vertex weights, and cotan operator diagonal LCii and off diagonal LCij terms.
-    		v.area = 0;
+    		v.area *= oneThird;
     		v.LCii = 0;
     		v.LCij = new double[ v.valence() ];
 
-    		
-    		
-    		
-    		
+            HalfEdge he;
+            double alpha,beta;
+            he = v.he;
+            for (int index = 0; index < v.LCij.length; index++) {
+                alpha = angleWithNext(he.twin.next);
+                beta = angleWithNext(he.next);
+                
+                v.LCij[index] = (1.0/Math.tan(alpha)+1.0/Math.tan(beta));
+                v.LCii += 1.0/Math.tan(alpha)-1.0/Math.tan(beta);
+                he = he.twin.next;
+            }
+            
+            v.LCii = v.LCii/2/v.area;
     	}
     }
     
@@ -191,10 +250,9 @@ public class HEDS {
      */
     private double angleWithNext( HalfEdge he ) {
     	// TODO: 6 Implement this function to compute the angle with next edge... you'll want to use this in a few places
-
-
-    	
-    	return 0;
+        Point3d a = he.head.p,b = he.next.head.p,c = he.next.next.head.p;
+        Vector3d ab = v3f.minus(b, a), cb = v3f.minus(b, c);
+        return v3f.dot(ab,cb)/ab.length()/cb.length();
     }
     
     /**

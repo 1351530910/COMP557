@@ -43,16 +43,26 @@ public class Vertex {
     
     /** distance */
     double phi = 0;
+
+    final double oneonthree = 1.0/3.0;
     
     /** 
      * @returns the valence of this vertex 
      */
     public int valence() {
     	// TODO: 5 compute the valence of this vertex
-    	
-    	
-    	
-    	return 0;
+        
+        HalfEdge start = he;
+        HalfEdge current = start.next.next.twin;
+        int count = 1;
+        area = current.leftFace.area;
+        while (current != start) {
+            current = current.next.next.twin;
+            area+=current.leftFace.area;
+            count++;
+        }
+        area*=oneonthree;
+    	return count;
     }
     
 }

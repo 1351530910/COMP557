@@ -29,6 +29,7 @@ public class PolygonSoup {
     /** Map for keeping track of how many n-gons we have for each n */
     private TreeMap<Integer,Integer> faceSidesHistogram = new TreeMap<Integer,Integer>();
     
+    double width,height,depth;
     /** A string summarizing the face sides histogram */
     public String soupStatistics;
     
@@ -68,7 +69,46 @@ public class PolygonSoup {
             
             // TODO: 1 compute a bounding box and scale and center the geometry
             
-            
+            double top = 0,
+            bottom = 0,
+            near = 0,
+            far = 0,
+            left = 0,
+            right = 0;
+
+            for (Vertex v : vertexList) {
+                if (v.p.y>top) 
+                    top = v.p.y;
+                if(v.p.y<bottom)
+                    bottom = v.p.y;
+                if(v.p.x>right)
+                    right = v.p.x;
+                if(v.p.x<left)
+                    left = v.p.x;
+                if(v.p.z>near)
+                    near = v.p.z;
+                if(v.p.z<far)
+                    far = v.p.z;
+            }
+            width = right-left;
+            height = top-bottom;
+            depth = near-far;
+
+            double largestDimension = width>height ? width:height;
+            largestDimension = largestDimension > depth ? largestDimension:depth;
+            double scale = 1/largestDimension*10.0;
+
+
+            Vector3d displacement = new Vector3d(0.5*(right+left), 0.5*(top+bottom), 0.5*(near+far));
+
+            for (int i = 0; i < vertexList.size(); i++) {
+                vertexList.get(i).p.sub(displacement);
+                vertexList.get(i).p.scale(scale);
+            }
+
+            width*=scale*0.5;
+            height*=scale*0.5;
+            depth*=scale*0.5;
             
             
             
