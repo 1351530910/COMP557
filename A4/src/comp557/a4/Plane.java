@@ -41,7 +41,7 @@ public class Plane extends Intersectable {
 			if (Math.abs(x%2) == Math.abs(z%2)) {
 				result.material = material;
 			}else {
-				result.material = material2;
+				result.material = material2==null?material:material2;
 			}
 			
 			

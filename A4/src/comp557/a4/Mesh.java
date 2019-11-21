@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector4d;
 
 public class Mesh extends Intersectable {
 	
@@ -34,38 +35,33 @@ public class Mesh extends Intersectable {
 		for (int[] face : soup.faceList) {
 
 			//3 points of triangle
-			Point3d p1 = soup.vertexList.get(face[0]).p;
-			Point3d p2 = soup.vertexList.get(face[1]).p;
-			Point3d p3 = soup.vertexList.get(face[2]).p;
+			Point3d p0 = soup.vertexList.get(face[0]).p;
+			Point3d p1 = soup.vertexList.get(face[1]).p;
+			Point3d p2 = soup.vertexList.get(face[2]).p;
 
-			//vectors and normal, following right hand rule
-			Vector3d v1 = v3d.minus(p2, p1);
-			Vector3d v2 = v3d.minus(p3, p2);
-			Vector3d v3 = v3d.minus(p1, p3);
-			Vector3d n = v3d.cross(v1, v3d.minus(p3, p1));
+			Vector3d v0v1 = v3d.minus(p1, p0);
+			Vector3d v0v2 = v3d.minus(p2, p0);
 
-			//check if facing other side
-			double cosTheta = v3d.dot(n, ray.viewDirection);
-			if (cosTheta>-Epsilon) continue;
+			Vector3d pvec = v3d.cross(ray.viewDirection,v0v2);
+			double det = v3d.dot(v0v1, pvec);
 
-			//if t not valid then discard
-			double d = v3d.dot(n, p1);
-			double t = (v3d.dot(n, ray.eyePoint) + d)/cosTheta;
-			if (t<Epsilon||t>=result.t) continue;
+			if(Math.abs(det)<Epsilon) continue;
 
-			//compute the point on same plane to triangle
-			Vector3d p = v3d.add(ray.eyePoint, v3d.times(ray.viewDirection, t));
-
-			//check if p inside triangle
+			double invdet = 1/det;
+			Vector3d tvec = v3d.minus(ray.eyePoint,p0);
+			double u = v3d.dot(tvec, pvec)*invdet;
+			if(u<0||u>1) continue;
+			Vector3d qvec = v3d.cross(tvec, v0v1);
+			double v = v3d.dot((ray.viewDirection), qvec)*invdet;
+			if(v<0||u+v>1) continue;
+			double t = v3d.dot(v0v2, qvec)*invdet;
 			
-			if(v3d.dot(n, v3d.cross(v1, v3d.minus(p, p1)))<0) continue;
-			if(v3d.dot(n, v3d.cross(v2, v3d.minus(p, p2)))<0) continue;
-			if(v3d.dot(n, v3d.cross(v3, v3d.minus(p, p3)))<0) continue;
-
-			result.t = t;
-			result.n = v3d.normalize(n);
-			result.material = material;
-			result.p = new Point3d(p);
+			if (t>Epsilon&&t<result.t) {
+				result.t = t;
+				result.p = new Point3d(v3d.add(ray.eyePoint, v3d.times(ray.viewDirection, t)));
+				result.material = material;
+				result.n = v3d.normalize(v3d.cross(v0v1, v0v2));
+			}
 		}
 	}
 

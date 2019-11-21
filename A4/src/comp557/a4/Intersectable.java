@@ -9,7 +9,7 @@ public abstract class Intersectable {
 	public Material material;
 	
 	//avoid self reflection in case
-	public static final double Epsilon = 0.00001;
+	public static final double Epsilon = 0.01;
 	
 	/** 
 	 * Default constructor, creates the default material for the surface
