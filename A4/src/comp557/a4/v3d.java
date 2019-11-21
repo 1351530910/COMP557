@@ -11,21 +11,25 @@ import javax.vecmath.Vector3d;
  */
 public class v3d {
     public static Vector3d add(Tuple3d a,Tuple3d b){
-    	double x = a.x+b.x;
-    	double y = a.y+b.y;
-    	double z = a.z+b.z;
-        return new Vector3d(x, y, z);
+        return new Vector3d(a.x+b.x, a.y+b.y, a.z+b.z);
     }
     
     public static Vector3d minus(Tuple3d a,Tuple3d b){
         return new Vector3d(a.x-b.x, a.y-b.y, a.z-b.z);
+	}
+	public static Vector3d times(Tuple3d a,Tuple3d b){
+        return new Vector3d(a.x*b.x, a.y*b.y, a.z*b.z);
+	}
+	public static Vector3d times(Color4f a,Tuple3d b){
+        return new Vector3d(a.x*b.x, a.y*b.y, a.z*b.z);
     }
     public static Vector3d times(Color4f a,double b){
         return new Vector3d((a.x*b), (a.y*b), (a.z*b));
     }
     public static Vector3d times(Tuple3d a,double b){
         return new Vector3d(a.x*b, a.y*b, a.z*b);
-    }
+	}
+	
     public static Vector3d times(Matrix4d m,Tuple3d t) {
     	Vector3d v= new Vector3d(t);
     	m.transform(v);
@@ -47,7 +51,7 @@ public class v3d {
     	return aa;
     }
     public static Vector3d normalize(Vector3d v) {
-    	Vector3d cpy = v;
+    	Vector3d cpy = new Vector3d(v);
     	cpy.normalize();
     	return cpy;
     }
@@ -65,10 +69,8 @@ public class v3d {
     	m.m21 = u.z;
     	m.m02 = -f.x;
     	m.m12 = -f.y;
-    	m.m22 = -f.z;
-    	m.m30 = -dot(s, o);
-    	m.m31 = -dot(u, o);
-    	m.m32 = dot(f, o);
+		m.m22 = -f.z;
+		m.transpose();
     	return m;
     }
     public static Matrix4d inverse(Matrix4d m) {

@@ -72,7 +72,9 @@ public class Scene {
         
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
-            	
+				if (i==200&&j==240) {
+					int pfda = 124123;
+				}
                 // TODO: Objective 1: generate a ray (use the generateRay method)
             	Ray ray = new Ray();
             	double[] offset = new double[2];
@@ -96,12 +98,20 @@ public class Scene {
 						Vector3d wi = v3d.normalize(v3d.minus(light.from, info.p));
 						Vector3d wo = v3d.normalize(v3d.minus(cam.from, info.p));
 						
-						//diffuse
-						color = v3d.add(color,(v3d.times(info.material.diffuse, Math.max(0, v3d.dot(wi, info.n))*light.power)));
-						//specular using blinn phong
 						Vector3d n = v3d.normalize(info.n);
 						Vector3d bisector = v3d.normalize(v3d.add(v3d.normalize(wi), v3d.normalize(wo)));
-						color = v3d.add(color,(v3d.times(info.material.specular, light.power*Math.pow(Math.max(0, v3d.dot(n, bisector)),info.material.shinyness))));
+
+						IntersectResult r = new IntersectResult();
+						//if in shadow then ignore that light's contribution
+						if (inShadow(null, light, surfaceList, r, new Ray(info.p,v3d.normalize(v3d.minus(light.from, info.p))))) continue;
+
+						//assume the I term in the light formula in obtained by lightcolor*lightpower
+						//specular using blinn phong
+						
+						
+						color = v3d.add(color,v3d.times(light.color,v3d.times(info.material.specular, light.power*Math.pow(Math.max(0, v3d.dot(n, bisector)),info.material.shinyness))));
+						//diffuse
+						color = v3d.add(color,v3d.times(light.color,v3d.times(info.material.diffuse, Math.max(0, v3d.dot(wi, info.n))*light.power)));
 					}
 					color.x = Math.min(1, color.x);
 					color.y = Math.min(1, color.y);
@@ -133,21 +143,29 @@ public class Scene {
 		
 		// TODO: Objective 1: generate rays given the provided parmeters
 		if (lookat==null) {
+			//generate the lookat matrix if there is none
 			lookat = v3d.inverse(v3d.lookat(cam.from, cam.to, cam.up));
 		}
-		
+
 		ray.eyePoint = cam.from;
+
+		double width = cam.imageSize.getWidth();
+		double height = cam.imageSize.getHeight();
+		
 		
 		double d = 1/Math.tan(Math.toRadians(cam.fovy/2));	//distance to film
-		double variation = 2.0/cam.imageSize.getHeight();	//derivative, since pixel is square, horizontal and vertical uses the same
-		double pxmin = (i/cam.imageSize.getHeight()-0.5*cam.imageSize.getWidth()/cam.imageSize.getHeight())*2;
-		double pymin = 2.0*j/cam.imageSize.getHeight()-1.0;
+		double variation = 2.0/cam.imageSize.getHeight();	//size of pixel, since pixel is square, horizontal and vertical uses the same
 		
-		double dirx = offset[0] * (variation+0.5) + pxmin;
-		double diry = offset[1] * (variation+0.5) + pymin;
+		//coordinate of pixel
+		double px = -(i/height-0.5*width/height)*2;	//it seems that the image is reversed left-right
+		double py = (2.0*j/height-1.0);
 		
+		//offset the pixel
+		double dirx = offset[0] * (variation+0.5) + px;
+		double diry = offset[1] * (variation+0.5) + py;
+		
+		//convert to world space
 		ray.viewDirection = v3d.times(v3d.normalize(v3d.times(lookat, new Vector3d(dirx, diry, d))),-1);
-		
 	}
 
 	/**
@@ -161,18 +179,15 @@ public class Scene {
 	 * 
 	 * @return True if a point is in shadow, false otherwise. 
 	 */
-	public static boolean inShadow(final IntersectResult result, final Light light, final SceneNode root, IntersectResult shadowResult, Ray shadowRay) {
+	public static boolean inShadow(final IntersectResult result, final Light light, final List<Intersectable> root, IntersectResult shadowResult, Ray shadowRay) {
 		
 		// TODO: Objective 5: check for shdows and use it in your lighting computation
-		
-//		shadowRay.eyePoint = result.p;
-//		shadowRay.viewDirection = v3d.normalize(v3d.minus(light.from, result.p));
-//		for (Intersectable obj : root.children) {
-//			obj.intersect(shadowRay, shadowResult);
-//			if (shadowResult.material!=null) {
-//				return true;
-//			}
-//		}
+		for (Intersectable obj : root) {
+			obj.intersect(shadowRay, shadowResult);
+			if (shadowResult.t<Double.POSITIVE_INFINITY) {
+				return true;
+			}
+		}
 		return false;
 	}    
 }

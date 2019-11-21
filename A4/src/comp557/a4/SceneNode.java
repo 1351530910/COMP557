@@ -65,7 +65,7 @@ public class SceneNode extends Intersectable {
         for ( Intersectable s : children ) {
             s.intersect( tmpRay, tmpResult );
         }
-        if ( tmpResult.t > 1e-9 && tmpResult.t < result.t ) {
+        if ( tmpResult.t > 1e-5 && tmpResult.t < result.t ) {
 
         	// TODO: do something useful here!
         	result.t = tmpResult.t;

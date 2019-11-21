@@ -37,7 +37,7 @@ public class Plane extends Intersectable {
 			result.t = t;
 			result.p = new Point3d(v3d.add(ray.eyePoint, v3d.times(ray.viewDirection, t)));
 			int x = result.p.x>=0 ? (int)result.p.x:(int)result.p.x+1;
-			int z = result.p.z>=0 ? (int)result.p.z:(int)result.p.z+1;
+			int z = result.p.z+0.5>=0 ? (int)(result.p.z+0.5):(int)(result.p.z-0.5);
 			if (Math.abs(x%2) == Math.abs(z%2)) {
 				result.material = material;
 			}else {
