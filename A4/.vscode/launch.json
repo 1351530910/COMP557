@@ -4,7 +4,8 @@
 			"type": "java",
 			"name": "CodeLens (Launch) - A4App",
 			"request": "launch",
-			"mainClass": "comp557.a4.A4App"
+			"mainClass": "comp557.a4.A4App",
+			"projectName": "comp557F19"
 		}
 	]
 }

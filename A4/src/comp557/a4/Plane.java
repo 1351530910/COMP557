@@ -32,7 +32,7 @@ public class Plane extends Intersectable {
     	
     	double t = -ray.eyePoint.y/ray.viewDirection.y;
     	
-    	if (t>mindist&&t<result.t) {
+    	if (t>Epsilon&&t<result.t) {
 			result.n = n;
 			result.t = t;
 			result.p = new Point3d(v3d.add(ray.eyePoint, v3d.times(ray.viewDirection, t)));

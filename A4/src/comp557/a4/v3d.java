@@ -4,7 +4,9 @@ import javax.vecmath.Color4f;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Tuple3d;
+import javax.vecmath.Tuple3f;
 import javax.vecmath.Tuple4d;
+import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector3d;
 /**
  * v3f
@@ -20,7 +22,10 @@ public class v3d {
 	public static Vector3d times(Tuple3d a,Tuple3d b){
         return new Vector3d(a.x*b.x, a.y*b.y, a.z*b.z);
 	}
-	public static Vector3d times(Color4f a,Tuple3d b){
+	public static Vector3d times(Tuple4f a,Tuple3d b){
+        return new Vector3d(a.x*b.x, a.y*b.y, a.z*b.z);
+	}
+	public static Vector3d times(Tuple4f a,Tuple3f b){
         return new Vector3d(a.x*b.x, a.y*b.y, a.z*b.z);
     }
     public static Vector3d times(Color4f a,double b){

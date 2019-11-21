@@ -52,7 +52,7 @@ public class Sphere extends Intersectable {
 			//the closest
 			double tmin = t1<t2 ? t1:t2;
 			
-			if (tmin<result.t&&tmin>mindist) {
+			if (tmin<result.t&&tmin>Epsilon) {
 				result.t = t1;
 				result.p = new Point3d(v3d.add(ray.eyePoint, v3d.times(ray.viewDirection, t1)));
 				result.n = v3d.times(v3d.minus(result.p, center),1.0/radius);

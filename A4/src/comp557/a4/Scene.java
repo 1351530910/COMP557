@@ -72,7 +72,7 @@ public class Scene {
         
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
-				if (i==200&&j==240) {
+				if (i==170&&j==300) {
 					int pfda = 124123;
 				}
                 // TODO: Objective 1: generate a ray (use the generateRay method)
@@ -103,7 +103,7 @@ public class Scene {
 
 						IntersectResult r = new IntersectResult();
 						//if in shadow then ignore that light's contribution
-						if (inShadow(null, light, surfaceList, r, new Ray(info.p,v3d.normalize(v3d.minus(light.from, info.p))))) continue;
+						//if (inShadow(null, light, surfaceList, r, new Ray(info.p,v3d.normalize(v3d.minus(light.from, info.p))))) continue;
 
 						//assume the I term in the light formula in obtained by lightcolor*lightpower
 						//specular using blinn phong
@@ -113,6 +113,7 @@ public class Scene {
 						//diffuse
 						color = v3d.add(color,v3d.times(light.color,v3d.times(info.material.diffuse, Math.max(0, v3d.dot(wi, info.n))*light.power)));
 					}
+					color = v3d.add(color, v3d.times(info.material.diffuse, ambient));
 					color.x = Math.min(1, color.x);
 					color.y = Math.min(1, color.y);
 					color.z = Math.min(1, color.z);
