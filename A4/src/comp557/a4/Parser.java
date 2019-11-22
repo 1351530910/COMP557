@@ -200,7 +200,12 @@ public class Parser {
         Node typeAttr = dataNode.getAttributes().getNamedItem("type");
         if ( typeAttr != null ) {
         	light.type = typeAttr.getNodeValue();
-        }        
+		}       
+		powerAttr = dataNode.getAttributes().getNamedItem("radius");
+        if ( powerAttr != null ) {
+        	light.radius = Double.parseDouble( powerAttr.getNodeValue() );
+        }     
+		
 		return light;
 	}
 	

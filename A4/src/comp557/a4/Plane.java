@@ -43,8 +43,6 @@ public class Plane extends Intersectable {
 			}else {
 				result.material = material2==null?material:material2;
 			}
-			
-			
 		}
     }
     

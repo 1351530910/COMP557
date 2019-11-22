@@ -37,6 +37,8 @@ public class SceneNode extends Intersectable {
     
     /** Child nodes */
     public List<Intersectable> children;
+
+    
     
     /**
      * Default constructor.
@@ -57,9 +59,10 @@ public class SceneNode extends Intersectable {
     @Override
     public void intersect(Ray ray, IntersectResult result) {
     	tmpRay.eyePoint.set(ray.eyePoint);
-    	tmpRay.viewDirection.set(ray.viewDirection);
-    	Minv.transform(tmpRay.eyePoint);
-    	Minv.transform(tmpRay.viewDirection);    	
+        tmpRay.viewDirection.set(ray.viewDirection);
+        tmpRay.direct = ray.direct;
+        Minv.transform(tmpRay.eyePoint);
+    	Minv.transform(tmpRay.viewDirection); 
     	tmpResult.t = Double.POSITIVE_INFINITY;
     	tmpResult.n.set(0, 0, 1);
         for ( Intersectable s : children ) {
@@ -67,11 +70,13 @@ public class SceneNode extends Intersectable {
         }
         if ( tmpResult.t > 1e-5 && tmpResult.t < result.t ) {
 
-        	// TODO: do something useful here!
-        	result.t = tmpResult.t;
+            M.transform(tmpResult.n);
+            M.transform(tmpResult.p);
+            result.t = tmpResult.t;
         	result.material = tmpResult.material;
-        	result.n = tmpResult.n;
-        	result.p = tmpResult.p;
+        	result.n.set(tmpResult.n);
+            result.p.set(tmpResult.p);
+            
         }
     }
     

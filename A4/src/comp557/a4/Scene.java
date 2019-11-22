@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
@@ -57,7 +59,7 @@ public class Scene {
      * renders the scene
      */
     public void render(boolean showPanel) {
- 
+		Random rnd = new Random(System.currentTimeMillis());
         Camera cam = render.camera; 
         int w = cam.imageSize.width;
         int h = cam.imageSize.height;
@@ -80,14 +82,33 @@ public class Scene {
 					// TODO: Objective 1: generate a ray (use the generateRay method)
 					Ray ray = new Ray();
 					double[] offset = new double[2];
-					offset[0] = 0;
-					offset[1] = 0;
+
+					//supersampling
+					if (render.samples>1) {
+						offset[0] = rnd.nextDouble()-0.5;
+						offset[1] = rnd.nextDouble()-0.5;
+					}
+					
+
 					generateRay(i, j, offset, cam, ray);
 					// TODO: Objective 2: test for intersection with scene surfaces
 					IntersectResult info = new IntersectResult();
-					for (Intersectable surface : surfaceList) {
-						surface.intersect(ray, info);
-					}
+					int reflections = 0;
+					final int maxreflections = 5;
+					do {
+						for (Intersectable surface : surfaceList) {
+							surface.intersect(ray, info);
+						}
+						if (info.material!=null&&info.material.name.equals("reflection")) {
+							Vector3d wi = v3d.normalize(v3d.minus(info.p, ray.eyePoint));
+							ray = new Ray(info.p,v3d.minus(wi,v3d.times(info.n, 2*v3d.dot(wi, info.n))));
+							info = new IntersectResult();
+							reflections++;
+						}else{
+							reflections = maxreflections;
+						}
+					} while (reflections<maxreflections);
+					
 					
 					// TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
 					if (info.t==Double.POSITIVE_INFINITY) {
@@ -102,19 +123,28 @@ public class Scene {
 							Vector3d n = v3d.normalize(info.n);
 							Vector3d bisector = v3d.normalize(v3d.add(v3d.normalize(wi), v3d.normalize(wo)));
 	
-							IntersectResult r = new IntersectResult();
-							//if in shadow then ignore that light's contribution
-							if (inShadow(null, light, surfaceList, r, new Ray(info.p,v3d.normalize(v3d.minus(light.from, info.p))))) continue;
-	
-							//assume the I term in the light formula in obtained by lightcolor*lightpower
-							//specular using blinn phong
-							if (i==120&&j==80) {
+							if (i==300&&j==100) {
 								int pfda = 124123;
 							}
-							
-							color = v3d.add(color,v3d.times(light.color,v3d.times(info.material.specular, light.power*Math.pow(Math.max(0, v3d.dot(n, bisector)),info.material.shinyness))));
-							//diffuse
-							color = v3d.add(color,v3d.times(light.color,v3d.times(info.material.diffuse, Math.max(0, v3d.dot(wi, n))*light.power)));
+							IntersectResult r = new IntersectResult();
+							double contribution = 1;
+
+							if (light.type.equals("point")) {
+								//if in shadow then ignore that light's contribution
+								if (inShadow(null, light, surfaceList, r, new Ray(info.p,v3d.normalize(v3d.minus(light.from, info.p))),v3d.minus(light.from, info.p).length())) continue;
+							}else{
+								for (int n_lightsample = 0; n_lightsample < 30; n_lightsample++) {
+									Vector3d samplelight = light.randomPoint();
+									if (inShadow(null, light, surfaceList, r, new Ray(info.p,v3d.normalize(v3d.minus(samplelight, info.p))),v3d.minus(samplelight, info.p).length())) 
+										contribution-=0.02;
+								}
+							}
+
+							//assume the I term in the light formula in obtained by lightcolor*lightpower
+								//specular using blinn phong
+								color = v3d.add(color,v3d.times(light.color,v3d.times(info.material.specular, contribution*light.power*Math.pow(Math.max(0, v3d.dot(n, bisector)),info.material.shinyness))));
+								//diffuse
+								color = v3d.add(color,v3d.times(light.color,v3d.times(info.material.diffuse, contribution*light.power*Math.max(0, v3d.dot(wi, n)))));
 						}
 						color = v3d.add(color, v3d.times(info.material.diffuse, ambient));
 						
@@ -122,6 +152,7 @@ public class Scene {
 						color.y = Math.min(1, color.y);
 						color.z = Math.min(1, color.z);
 						clrs[i][j] = v3d.add(color, clrs[i][j]);
+						render.setPixel(i, j, getcolor(clrs[i][j],255));
 					}
 				}
             }
@@ -176,8 +207,8 @@ public class Scene {
 		double py = (2.0*j/height-1.0);
 		
 		//offset the pixel
-		double dirx = offset[0] * (variation+0.5) + px;
-		double diry = offset[1] * (variation+0.5) + py;
+		double dirx = offset[0] * (variation) + px;
+		double diry = offset[1] * (variation) + py;
 		
 		//convert to world space
 		ray.viewDirection = v3d.times(v3d.normalize(v3d.times(lookat, new Vector3d(dirx, diry, d))),-1);
@@ -194,12 +225,12 @@ public class Scene {
 	 * 
 	 * @return True if a point is in shadow, false otherwise. 
 	 */
-	public static boolean inShadow(final IntersectResult result, final Light light, final List<Intersectable> root, IntersectResult shadowResult, Ray shadowRay) {
-		
+	public static boolean inShadow(final IntersectResult result, final Light light, final List<Intersectable> root, IntersectResult shadowResult, Ray shadowRay,double maxT) {
+		shadowRay.direct = false;
 		// TODO: Objective 5: check for shdows and use it in your lighting computation
 		for (Intersectable obj : root) {
 			obj.intersect(shadowRay, shadowResult);
-			if (shadowResult.t<Double.POSITIVE_INFINITY) {
+			if (shadowResult.t<maxT) {
 				return true;
 			}
 		}

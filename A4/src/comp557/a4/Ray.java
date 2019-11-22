@@ -10,6 +10,7 @@ public class Ray {
 	
 	/** The direction of the ray */
 	public Vector3d viewDirection = new Vector3d( 0, 0, -1 );
+	public boolean direct = true;
 	
 	/**
 	 * Default constructor.  Be careful not to use the ray before
