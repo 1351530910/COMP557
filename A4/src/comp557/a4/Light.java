@@ -33,10 +33,14 @@ public class Light {
     	// do nothing
     }
     public Vector3d randomPoint(){
-        Vector3d v;
-        do {
-            v = new Vector3d(rnd.nextDouble()*1.2-0.6,rnd.nextDouble()*1.2-0.6,rnd.nextDouble()*1.2-0.6);
-        } while (v.lengthSquared()>=1&&v.lengthSquared()<0.7);
-        return v3d.add(v3d.times(v,radius*2), from);
+        Vector3d v = new Vector3d();
+        double theta = rnd.nextDouble()*Math.PI;
+        v.x = Math.cos(theta)*radius;
+        double r = Math.sin(theta);
+        double alpha = rnd.nextDouble()*2*Math.PI;
+        v.y = Math.cos(alpha)*r;
+        v.z = Math.sin(alpha)*r;
+
+        return v3d.add(v, from);
     }
 }
