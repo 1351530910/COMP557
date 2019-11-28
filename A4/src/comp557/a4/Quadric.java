@@ -28,5 +28,6 @@ public class Quadric extends Intersectable {
 	public void intersect(Ray ray, IntersectResult result) {
 		
 	}
+
 	
 }

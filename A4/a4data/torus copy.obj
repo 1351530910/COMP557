@@ -1,9 +1,0 @@
-# Blender3D v249 OBJ File: torus3.obj.blend
-# www.blender3d.org
-v 1 0 0
-v 0 1 0
-v 0 0 1
-
-usemtl (null)
-s 1
-f 1 2 3

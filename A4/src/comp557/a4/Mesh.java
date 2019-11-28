@@ -5,7 +5,8 @@ import java.util.Map;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
+
+import comp557.a4.PolygonSoup.Vertex;
 
 public class Mesh extends Intersectable {
 	
@@ -20,6 +21,8 @@ public class Mesh extends Intersectable {
 	 */
 	public PolygonSoup soup;
 
+	public Box boundingbox;
+
 	public Mesh() {
 		super();
 		this.soup=null;
@@ -31,6 +34,10 @@ public class Mesh extends Intersectable {
 		// TODO: Objective 7: ray triangle intersection for meshes
 		//assume there are only triangles
 		//using barycentric coordinate
+
+		if (!boundingbox.testIntersect(ray)) {
+			return;
+		}
 
 		for (int[] face : soup.faceList) {
 
@@ -64,5 +71,20 @@ public class Mesh extends Intersectable {
 			}
 		}
 	}
+
+	public void computeMinMax() {
+		
+		Vector3d max = new Vector3d(soup.vertexList.get(0).p);
+		Vector3d min = new Vector3d(soup.vertexList.get(0).p);
+		for (Vertex v : soup.vertexList) {
+			max = v3d.max(max, v.p);
+			min = v3d.min(min,v.p);
+		}
+		boundingbox = new Box();
+		boundingbox.max = max;
+		boundingbox.min = min;
+		
+	}
+
 
 }

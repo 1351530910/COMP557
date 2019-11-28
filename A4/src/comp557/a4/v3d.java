@@ -80,5 +80,11 @@ public class v3d {
     	Matrix4d inv = new Matrix4d();
     	inv.invert(m);
     	return inv;
-    }
+	}
+	public static Vector3d max(Tuple3d a,Tuple3d b){
+		return new Vector3d(a.x>b.x?a.x:b.x,a.y>b.y?a.y:b.y,a.z>b.z?a.z:b.z);
+	}
+	public static Vector3d min(Tuple3d a,Tuple3d b){
+		return new Vector3d(a.x<b.x?a.x:b.x,a.y<b.y?a.y:b.y,a.z<b.z?a.z:b.z);
+	}
 }

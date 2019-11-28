@@ -64,7 +64,7 @@ public class Parser {
             	Mesh mesh = Parser.createMesh(n);
             	scene.surfaceList.add( mesh );
             }
-        }
+		}
         return scene;
 	}
 	
@@ -430,7 +430,7 @@ public class Parser {
             double x = s.nextDouble();
             double y = s.nextDouble();
             double z = s.nextDouble();
-            box.min = new Point3d(x, y, z);
+            box.min = new Vector3d(x, y, z);
             s.close();
 		}
 		Node maxAttr = dataNode.getAttributes().getNamedItem("max");
@@ -439,7 +439,7 @@ public class Parser {
             double x = s.nextDouble();
             double y = s.nextDouble();
             double z = s.nextDouble();
-            box.max = new Point3d(x, y, z);
+            box.max = new Vector3d(x, y, z);
             s.close();
 		}		
 		box.material = parseMaterial(dataNode, "material");
@@ -464,7 +464,8 @@ public class Parser {
 				mesh.soup = other.soup;
 			}
         }
-        mesh.material = parseMaterial(dataNode, "material");
+		mesh.material = parseMaterial(dataNode, "material");
+		mesh.computeMinMax();
     	return mesh;    	
 	}
 

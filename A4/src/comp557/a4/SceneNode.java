@@ -52,12 +52,10 @@ public class SceneNode extends Intersectable {
     	this.children = new LinkedList<Intersectable>();
     }
     
-    private IntersectResult tmpResult = new IntersectResult();
-    
-    private Ray tmpRay = new Ray();
-    
     @Override
     public void intersect(Ray ray, IntersectResult result) {
+        IntersectResult tmpResult = new IntersectResult();
+        Ray tmpRay = new Ray();
     	tmpRay.eyePoint.set(ray.eyePoint);
         tmpRay.viewDirection.set(ray.viewDirection);
         tmpRay.direct = ray.direct;

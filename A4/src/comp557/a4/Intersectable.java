@@ -1,7 +1,9 @@
 package comp557.a4;
 
+import javax.vecmath.Vector3d;
+
 /**
- * Abstract class for an intersectable surface 
+ * Abstract class for an intersectable surface
  */
 public abstract class Intersectable {
 	
@@ -10,7 +12,7 @@ public abstract class Intersectable {
 	
 	//avoid self reflection in case
 	public static final double Epsilon = 0.01;
-	
+
 	/** 
 	 * Default constructor, creates the default material for the surface
 	 */
@@ -24,6 +26,5 @@ public abstract class Intersectable {
 	 * @param ray
 	 * @param result
 	 */
-    public abstract void intersect(Ray ray, IntersectResult result);
-    
+	public abstract void intersect(Ray ray, IntersectResult result);
 }

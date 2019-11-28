@@ -33,8 +33,8 @@ public class Sphere extends Intersectable {
     	this.radius = radius;
     	this.center = center;
     	this.material = material;
-    }
-    
+	}
+	
     @Override
     public void intersect( Ray ray, IntersectResult result ) {
     
@@ -61,5 +61,6 @@ public class Sphere extends Intersectable {
 		}
 	
     }
+
     
 }

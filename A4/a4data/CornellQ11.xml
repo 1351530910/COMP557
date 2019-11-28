@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<scene ambient="0.1 0.1 0.1 1.0">
+  
+  <light name="myLight" color="1 1 1" from="0 18 0 " power="0.5" radius="0.3" type="spherical" />
+
+  <material name="b" diffuse="0 0 1" specular="0.5 0.5 0.5" hardness="16" />
+  <material name="r" diffuse="1 0 0" specular="0.5 0.5 0.5" hardness="16" />
+  <material name="g" diffuse="0 1 0" specular="0.5 0.5 0.5" hardness="16" />
+  <material name="y" diffuse="1 1 0" specular="0.5 0.5 0.5" hardness="16" />
+  <material name="a" diffuse="0 1 1" specular="0.5 0.5 0.5" hardness="16" />
+  <material name="p" diffuse="0.9 1 0.9" specular="0.5 0.5 0.5" hardness="16" />
+  <material name="reflection" diffuse="1 0 1" specular="0.5 0.5 0.5" hardness="16" />
+  <!-- render configuration -->
+
+  <render bgcolor="0 0 0" output="q11.png" >
+      <camera name="myCamera" from="0 10 30" to="0 10 -5" up="0 1 0" fovy="45"  width="1280" height="1280" />
+  </render> 
+  
+  <node name="root" >
+    <mesh name="myTorus" filename="a4data/wall1.obj" >
+      <material ref="r" />
+    </mesh>
+  </node>
+  <node name="wall2" >
+    <mesh name="myTorus" filename="a4data/wall2.obj" >
+      <material ref="g" />
+    </mesh>
+  </node>  
+<node name="wall3" >
+    <mesh name="myTorus" filename="a4data/wall3.obj" >
+      <material ref="b" />
+    </mesh>
+  </node>  
+<node name="wall4" >
+    <mesh name="myTorus" filename="a4data/wall4.obj" >
+      <material ref="y" />
+    </mesh>
+  </node>  
+<node name="wall5" >
+    <mesh name="myTorus" filename="a4data/wall5.obj" >
+      <material ref="a" />
+    </mesh>
+  </node>  
+ <node name="mirror1" >
+    <mesh name="myTorus" filename="a4data/mirror1.obj" >
+      <material ref="reflection" />
+    </mesh>
+  </node>  
+<node name="mirror2" >
+    <mesh name="myTorus" filename="a4data/mirror2.obj" >
+      <material ref="reflection" />
+    </mesh>
+  </node>  
+	<node name="sph" >
+	  <sphere center="3 3 3" radius="2" >
+		<material ref="reflection" />
+	  </sphere>
+  </node>
+<node name="text" >
+    <mesh name="myTorus" filename="a4data/abc.obj" >
+      <material ref="p" />
+    </mesh>
+  </node>  
+</scene>
