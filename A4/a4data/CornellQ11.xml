@@ -12,7 +12,7 @@
   <material name="reflection" diffuse="1 0 1" specular="0.5 0.5 0.5" hardness="16" />
   <!-- render configuration -->
 
-  <render bgcolor="0 0 0" output="q11.png" >
+  <render bgcolor="0 0 0" output="q11.png" samples="15">
       <camera name="myCamera" from="0 10 30" to="0 10 -5" up="0 1 0" fovy="45"  width="1280" height="1280" />
   </render> 
   

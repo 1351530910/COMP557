@@ -55,14 +55,16 @@ public class Mesh extends Intersectable {
 			if(Math.abs(det)<Epsilon) continue;
 
 			double invdet = 1/det;
+			
 			Vector3d tvec = v3d.minus(ray.eyePoint,p0);
 			double u = v3d.dot(tvec, pvec)*invdet;
 			if(u<0||u>1) continue;
+
 			Vector3d qvec = v3d.cross(tvec, v0v1);
 			double v = v3d.dot((ray.viewDirection), qvec)*invdet;
 			if(v<0||u+v>1) continue;
+
 			double t = v3d.dot(v0v2, qvec)*invdet;
-			
 			if (t>Epsilon&&t<result.t) {
 				result.t = t;
 				result.p = new Point3d(v3d.add(ray.eyePoint, v3d.times(ray.viewDirection, t)));

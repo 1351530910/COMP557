@@ -167,7 +167,6 @@ public class Scene {
 				}else{
 					render.setPixel(i, j, getcolor(v3d.times(clrs[i][j], invSamples),255));
 				}
-				
 			}
 		}
         // save the final render image

@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MeshProcessingApp",
+            "request": "launch",
+            "mainClass": "comp557.a3.MeshProcessingApp",
+            "projectName": "a3"
+        }
+    ]
+}
